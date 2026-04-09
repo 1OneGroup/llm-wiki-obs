@@ -11,7 +11,7 @@ Generate a social media image for One Group Developers using Nano Banana 2 MCP.
 ## Image Rules (CRITICAL)
 - **NEVER** AI-generate: building facades, site photos, aerial views, interior rooms, amenity renders of The Clermont or The Saavira
 - **DO** AI-generate: decorative backgrounds, text overlays, abstract patterns, lifestyle scenes (no identifiable project buildings)
-- **Real project photos** → use files from `D:\One Group\supasmart\_templates\designs\`
+- **Real project photos** → use files from `_attachments/designs/` (clermont/ or saavira/)
 
 ## Brand Specifications
 - Colors: #6B1C23 (Deep Maroon) · #F9F6F1 (Warm Ivory) · #C9A962 (Aged Gold)

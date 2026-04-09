@@ -66,7 +66,7 @@ prompt: |
      - Infrastructure News: 1080x1080 with "INFRA UPDATE" ticker
 
   5. **Visual direction:**
-     - If project building/interior needed: specify EXACT file from _templates/designs/ — NEVER AI-generate building facades, site photos, interiors, or aerials
+     - If project building/interior needed: specify EXACT file from _attachments/designs/clermont/ or _attachments/designs/saavira/ — NEVER AI-generate building facades, site photos, interiors, or aerials
      - If decorative/background/overlay: AI generation via Nano Banana is OK
      - Brand colors: #6B1C23 maroon · #F9F6F1 ivory · #C9A962 gold
 
@@ -94,7 +94,7 @@ prompt: |
     "design_template": "...",
     "visual_direction": {
       "use_real_photo": true,
-      "photo_path": "_templates/designs/clermont/...",
+      "photo_path": "_attachments/designs/clermont/...",
       "ai_generation_allowed": false,
       "ai_prompt": null
     },
