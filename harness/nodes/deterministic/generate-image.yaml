@@ -1,0 +1,41 @@
+# Generate Image Node
+# Calls Nano Banana 2 MCP to create the visual
+# Input: post_package from generate-content node
+
+id: generate-image
+type: deterministic
+description: "Call Nano Banana 2 MCP to generate image from prompt, or confirm real photo path"
+
+inputs:
+  - post_package
+
+condition:
+  # Only runs Nano Banana if AI generation is needed
+  # If real_photo, just confirms the path exists
+  if: "{{post_package.visual.type}} == 'ai_generated'"
+  then: call_nano_banana
+  else: confirm_real_photo
+
+steps:
+  call_nano_banana:
+    mcp_tool: nano_banana_generate
+    # Nano Banana 2 MCP parameters
+    params:
+      prompt: "{{post_package.visual.nano_banana_prompt}}"
+      width: "{{post_package.visual.dimensions.split('x')[0]}}"
+      height: "{{post_package.visual.dimensions.split('x')[1]}}"
+      style: "photorealistic"
+      quality: "high"
+    output_path: "Marketing Department/working/images/{{date}}-{{slug}}.png"
+    outputs:
+      - image_path
+
+  confirm_real_photo:
+    # No generation needed — just pass through the real photo path
+    validate_path: "{{post_package.visual.real_photo_path}}"
+    outputs:
+      - image_path
+
+outputs:
+  - image_path
+  - post_package  # Pass through to publish node

@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "65e0407e9f2d466f",
+    "type": "split",
+    "children": [
+      {
+        "id": "88cb447f22b840c5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f949830d092e6e2c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Marketing Department/CLAUDE.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "CLAUDE"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d66714dadf99409d",
+    "type": "split",
+    "children": [
+      {
+        "id": "243ad3bf10573936",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ac8daddd6a08173b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "18532dd66f64c0df",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "cb652a44574c0809",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "829c90d374b1d627",
+    "type": "split",
+    "children": [
+      {
+        "id": "5a2851e47e8d7bb8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4d15d10534d53515",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Marketing Department/CLAUDE.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for CLAUDE"
+            }
+          },
+          {
+            "id": "ee482dabd440cb60",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Marketing Department/CLAUDE.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from CLAUDE"
+            }
+          },
+          {
+            "id": "7dfa868980cbbb8a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "b89594e3de9ccf25",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "8486ae1abc313323",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Marketing Department/CLAUDE.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of CLAUDE"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "f949830d092e6e2c",
+  "lastOpenFiles": [
+    "Marketing Department/workflows/social-post-pipeline.yaml",
+    "Marketing Department/workflows/social-post-pipeline.yaml.tmp.20972.1775725861701",
+    "harness/nodes/deterministic/publish-postiz.yaml",
+    "harness/nodes/deterministic/generate-image.yaml",
+    "harness/nodes/deterministic/generate-image.yaml.tmp.20972.1775725844099",
+    "harness/nodes/ai/generate-content.yaml",
+    "harness/nodes/ai/research.yaml",
+    "harness/workflows/trending.yaml",
+    "harness/workflows/trending.yaml.tmp.20972.1775725800126",
+    "harness/nodes/deterministic/trending.yaml",
+    "Marketing Department/working/images",
+    "Untitled.canvas",
+    "2026-04-09.md",
+    "Marketing Department/wiki/INDEX.md",
+    "_vault/INDEX.md",
+    "Marketing Department/_context/INDEX.md"
+  ]
+}

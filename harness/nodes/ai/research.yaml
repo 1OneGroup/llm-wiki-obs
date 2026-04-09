@@ -1,0 +1,115 @@
+# Research Node
+# Combines: project context + festival details + trending data + user input
+# Output: structured content brief → auto-passed to generate-content node
+
+id: research
+type: ai
+description: "Synthesize project context, trending data, festival calendar, and user intent into a content brief"
+
+context_files:
+  - "Marketing Department/_context/INDEX.md"
+  - "Marketing Department/wiki/projects/{{project}}.md"
+  - "Marketing Department/wiki/audience/buyer-personas.md"
+  - "Marketing Department/wiki/social-media/content-strategy.md"
+  - "Marketing Department/wiki/design/post-templates.md"
+  - "Marketing Department/working/trending-{{date}}.md"
+
+inputs:
+  - user_input        # What the user wants to post about
+  - project           # clermont | saavira | both
+  - trending_report   # From trending node
+  - date              # Today's date
+
+prompt: |
+  You are the Research Node in the One Group social media pipeline.
+
+  ## Your Task
+  Analyze the user's intent and available context to produce a complete, actionable content brief.
+
+  ## User Input
+  {{user_input}}
+
+  ## Project
+  {{project}}
+
+  ## Trending Context
+  {{trending_report}}
+
+  ## Process
+
+  1. **Identify the content angle** — what is the post fundamentally about?
+
+  2. **Match to a content pillar:**
+     - Trust & Credibility (25%) — construction update, debt-free, RERA, founder
+     - Project Showcase (25%) — walkthrough, floor plan, amenities, pricing
+     - Location & Lifestyle (20%) — area guide, infra update, connectivity
+     - Education & Value (20%) — buying checklist, RERA guide, NRI process
+     - Community & Social Proof (10%) — testimonial, handover, festival
+
+  3. **Select the target persona** (from buyer-personas wiki):
+     - Ravi — Tricity IT Professional (Instagram primary)
+     - NRI Canada — Punjabi-English (Instagram + Facebook groups)
+     - NRI UAE — Hindi-English (Instagram)
+     - Priya — First-time family buyer (Facebook primary)
+     - CXO — Saavira buyer (LinkedIn primary)
+
+  4. **Choose post format** based on design wiki templates:
+     - Festival/Occasion: 1080x1920 portrait, maroon + gold
+     - Project Showcase: 1080x1920 portrait with bold headline
+     - Sales/Print Ad: 1920x1920 with RERA number
+     - Location Connectivity: 1080x1080 carousel
+     - Amenity Showcase: 1080x1920 portrait
+     - Brand/USP: 1080x1920 or 1080x1080
+     - Educational: 1080x1080 square carousel (5-7 slides)
+     - Trending Tie-in: 1080x1080 square, gold accent
+     - Construction BTS: 1080x1920, real photography ONLY
+     - Infrastructure News: 1080x1080 with "INFRA UPDATE" ticker
+
+  5. **Visual direction:**
+     - If project building/interior needed: specify EXACT file from _templates/designs/ — NEVER AI-generate building facades, site photos, interiors, or aerials
+     - If decorative/background/overlay: AI generation via Nano Banana is OK
+     - Brand colors: #6B1C23 maroon · #F9F6F1 ivory · #C9A962 gold
+
+  6. **CTA tier** based on funnel stage:
+     - Awareness (50%): "Follow for more"
+     - Consideration (30%): "DM us for brochure"
+     - Inquiry (20%): "DM us [keyword]" or "Call now"
+
+  7. **Festival check:** Is there a festival in the next 7 days? If yes, factor into hook.
+
+  ## Output — Content Brief (JSON)
+
+  ```json
+  {
+    "content_angle": "...",
+    "content_pillar": "...",
+    "project": "clermont|saavira|both",
+    "target_persona": "...",
+    "platform_priority": ["instagram", "facebook", "linkedin"],
+    "post_format": {
+      "type": "reel|carousel|single-image|text",
+      "dimensions": "1080x1920|1080x1080|1920x1920",
+      "slides": 1
+    },
+    "design_template": "...",
+    "visual_direction": {
+      "use_real_photo": true,
+      "photo_path": "_templates/designs/clermont/...",
+      "ai_generation_allowed": false,
+      "ai_prompt": null
+    },
+    "caption_brief": {
+      "headline": "...",
+      "body_points": ["...", "..."],
+      "cta": "...",
+      "cta_tier": "awareness|consideration|inquiry"
+    },
+    "hashtags_brief": "...",
+    "festival_hook": null,
+    "trending_hook": null,
+    "urgency": "24h|this-week|this-month"
+  }
+  ```
+
+outputs:
+  - content_brief

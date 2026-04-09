@@ -1,0 +1,88 @@
+# Generate Content Node
+# Input: content_brief from research node
+# Output: full caption + Nano Banana image prompt + hashtags
+# Auto-chains from research node
+
+id: generate-content
+type: ai
+description: "Write full caption, generate Nano Banana image prompt, compile post package"
+
+context_files:
+  - "Marketing Department/wiki/brand/brand-voice.md"
+  - "Marketing Department/wiki/design/post-templates.md"
+  - "Marketing Department/wiki/social-media/caption-templates.md"
+  - "Marketing Department/wiki/social-media/platform-rules.md"
+
+inputs:
+  - content_brief   # JSON from research node
+
+prompt: |
+  You are the Content Generation Node. You receive a content brief and produce the full post package.
+
+  ## Content Brief
+  {{content_brief}}
+
+  ## Your Tasks
+
+  ### 1. Write the Caption
+
+  Platform: {{content_brief.platform_priority[0]}}
+
+  Rules:
+  - NO banned words: dream home, world-class, bespoke, ultra-luxury, exclusive offer, limited time, hurry, don't miss out
+  - Tone: Confident, quiet luxury, trust-forward. NOT pushy or promotional.
+  - Instagram: max 2200 chars, hook in first line, emojis OK (minimal, tasteful)
+  - Facebook: community tone, slightly longer, storytelling approach
+  - LinkedIn: professional, data-led, founder voice, no emojis
+
+  Caption structure from templates:
+  - Hook line (first 125 chars — appears before "more")
+  - Body (3-5 short paragraphs or bullet points)
+  - CTA (one clear action: {{content_brief.caption_brief.cta}})
+  - Hashtags (15-20 for Instagram, 3-5 for LinkedIn)
+
+  ### 2. Write the Nano Banana Image Prompt
+
+  ONLY if content_brief.visual_direction.ai_generation_allowed is true.
+  If false: specify the real photo path instead.
+
+  If AI generation allowed:
+  - Style: Quiet luxury, professional, photorealistic OR clean graphic design
+  - Brand colors: Deep Maroon #6B1C23 · Warm Ivory #F9F6F1 · Aged Gold #C9A962
+  - Logo placement: bottom-right corner, small
+  - Dimensions: {{content_brief.post_format.dimensions}}
+  - Template category: {{content_brief.design_template}}
+  - Specific visual: [describe exactly what to show]
+  - Mood: premium, trustworthy, aspirational (not flashy)
+  - NEVER include: building facades, site photos, aerials, interior rooms, amenity renders of real projects
+
+  ### 3. Compile Post Package
+
+  Output a structured post package JSON:
+
+  ```json
+  {
+    "post_package": {
+      "caption": {
+        "instagram": "...",
+        "facebook": "...",
+        "linkedin": "..."
+      },
+      "hashtags": {
+        "instagram": ["...", "..."],
+        "linkedin": ["...", "..."]
+      },
+      "visual": {
+        "type": "ai_generated|real_photo",
+        "real_photo_path": null,
+        "nano_banana_prompt": "...",
+        "dimensions": "1080x1920"
+      },
+      "platforms": ["instagram", "facebook"],
+      "content_brief_ref": {{content_brief}}
+    }
+  }
+  ```
+
+outputs:
+  - post_package

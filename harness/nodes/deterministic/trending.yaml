@@ -1,0 +1,39 @@
+# Trending Node — Global, reusable
+# Fetches Google Trends RSS for IN, PB (Punjab), HR (Haryana)
+# Filters for real estate relevance
+# Used by: research node, content calendar, any planning workflow
+
+id: trending
+type: deterministic
+description: "Fetch and filter Google Trends RSS for real estate content opportunities"
+
+commands:
+  - name: fetch_india
+    url: "https://trends.google.com/trending/rss?geo=IN"
+    method: GET
+    parse: xml
+    output: trends_india
+
+  - name: fetch_punjab
+    url: "https://trends.google.com/trending/rss?geo=IN-PB"
+    method: GET
+    parse: xml
+    output: trends_punjab
+
+  - name: fetch_haryana
+    url: "https://trends.google.com/trending/rss?geo=IN-HR"
+    method: GET
+    parse: xml
+    output: trends_haryana
+
+filter:
+  keywords:
+    direct: [property, real estate, apartment, flat, builder, RERA, home loan, EMI, possession, plot, villa, BHK]
+    infrastructure: [metro, highway, airport, expressway, flyover, Mohali, Gurugram, Chandigarh, Tricity, Panchkula, Zirakpur]
+    economic: [RBI, interest rate, repo rate, budget, GST, stamp duty, circle rate]
+    cultural: [festival, Diwali, Akshaya Tritiya, Dhanteras, Baisakhi, Holi, Navratri]
+
+output:
+  file: "Marketing Department/working/trending-{{date}}.md"
+  format: markdown
+  fields: [direct_trends, infrastructure_trends, festival_hooks, content_opportunities]

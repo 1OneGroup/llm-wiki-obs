@@ -1,0 +1,99 @@
+name: social-post-pipeline
+description: "Research → Generate Content → Generate Image → Human Approval → Publish"
+version: "1.0"
+
+# Full social media post pipeline for One Group Developers
+# Inputs: user describes what to post, pipeline handles everything else
+
+inputs:
+  - name: user_input
+    description: "What do you want to post about? (e.g., 'Clermont construction update', 'Diwali greeting for Saavira')"
+    required: true
+  - name: project
+    description: "Which project? clermont | saavira | both"
+    default: "both"
+  - name: platforms
+    description: "Which platforms? instagram | facebook | linkedin | all"
+    default: "all"
+
+nodes:
+  # Node 1: Trending (global, reusable)
+  - id: trending
+    type: deterministic
+    description: "Fetch Google Trends for IN, Punjab, Haryana — filter for real estate"
+    ref: "harness/nodes/deterministic/trending.yaml"
+    inputs:
+      - date: "{{today}}"
+    outputs: [trending_data]
+
+  # Node 2: Research (auto-receives trending output)
+  - id: research
+    type: ai
+    description: "Synthesize project context + festival + trending + user intent → content brief"
+    ref: "harness/nodes/ai/research.yaml"
+    inputs:
+      - user_input: "{{user_input}}"
+      - project: "{{project}}"
+      - trending_report: "{{trending_data}}"
+      - date: "{{today}}"
+    outputs: [content_brief]
+    # Auto-chains: output immediately passed to generate-content
+
+  # Node 3: Generate Content (auto-receives content brief)
+  - id: generate-content
+    type: ai
+    description: "Write caption + Nano Banana image prompt + hashtags → post package"
+    ref: "harness/nodes/ai/generate-content.yaml"
+    inputs:
+      - content_brief: "{{content_brief}}"
+    outputs: [post_package]
+    # Auto-chains: output immediately passed to generate-image
+
+  # Node 4: Generate Image (calls Nano Banana 2 MCP)
+  - id: generate-image
+    type: deterministic
+    description: "Call Nano Banana 2 MCP or confirm real photo path"
+    ref: "harness/nodes/deterministic/generate-image.yaml"
+    inputs:
+      - post_package: "{{post_package}}"
+    outputs: [image_path, post_package]
+
+  # Node 5: Human Approval Gate
+  - id: approve-post
+    type: human_approval
+    description: "Review caption, image, and platforms before publishing"
+    message: |
+      Post ready for review.
+
+      **Caption preview** (Instagram):
+      {{post_package.caption.instagram}}
+
+      **Image:** {{image_path}}
+      **Platforms:** {{post_package.platforms}}
+
+      Open the image in Obsidian or your file manager to review.
+      Approve to publish now, or reject to revise.
+    inputs: [post_package, image_path]
+
+  # Node 6: Publish (Postiz MCP)
+  - id: publish
+    type: deterministic
+    description: "Publish to selected platforms via Postiz MCP"
+    ref: "harness/nodes/deterministic/publish-postiz.yaml"
+    inputs:
+      - post_package: "{{post_package}}"
+      - image_path: "{{image_path}}"
+    outputs: [post_ids, published_urls]
+
+  # Node 7: Log to wiki
+  - id: log-post
+    type: ai
+    description: "Append published post entry to content log"
+    prompt: |
+      Append to Marketing Department/wiki/_log.md:
+      | {{today}} | Social Post | {{post_package.content_brief_ref.content_angle}} | {{post_package.platforms}} | {{published_urls}} |
+    inputs: [post_package, published_urls]
+
+outputs:
+  - post_ids
+  - published_urls

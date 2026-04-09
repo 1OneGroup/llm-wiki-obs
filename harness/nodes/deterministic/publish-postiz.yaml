@@ -1,0 +1,50 @@
+# Publish Node
+# Calls Postiz MCP to schedule/publish the post
+# Input: post_package + image_path from generate-image node
+
+id: publish-postiz
+type: deterministic
+description: "Publish post to social platforms via Postiz MCP"
+
+inputs:
+  - post_package
+  - image_path
+
+# Rate limit: 30 requests/hour
+rate_limit: 30/hour
+
+steps:
+  - id: get-config
+    mcp_tool: POSTIZ_GET_CONFIG_ID
+    description: "Get Postiz config ID and current UTC time"
+    outputs: [config_id, current_utc]
+
+  - id: verify-providers
+    mcp_tool: POSTIZ_PROVIDERS_LIST
+    description: "Verify connected social accounts"
+    outputs: [providers]
+
+  - id: publish
+    mcp_tool: POSTIZ_SCHEDULE_POST
+    description: "Publish immediately to selected platforms"
+    params:
+      type: "now"
+      config_id: "{{config_id}}"
+      platforms: "{{post_package.platforms}}"
+      content:
+        instagram:
+          caption: "{{post_package.caption.instagram}}"
+          hashtags: "{{post_package.hashtags.instagram}}"
+          image: "{{image_path}}"
+        facebook:
+          caption: "{{post_package.caption.facebook}}"
+          image: "{{image_path}}"
+        linkedin:
+          caption: "{{post_package.caption.linkedin}}"
+          hashtags: "{{post_package.hashtags.linkedin}}"
+          image: "{{image_path}}"
+    outputs: [post_ids, published_urls]
+
+outputs:
+  - post_ids
+  - published_urls

@@ -1,0 +1,44 @@
+name: trending
+description: "Standalone trending research — fetch, filter, save report"
+version: "1.0"
+
+# Can be called standalone or as a sub-workflow from research node
+
+nodes:
+  - id: fetch-trends
+    type: deterministic
+    description: "Fetch Google Trends RSS for IN, Punjab, Haryana"
+    ref: "harness/nodes/deterministic/trending.yaml"
+    outputs: [trends_data]
+
+  - id: analyze-trends
+    type: ai
+    description: "Filter and rank trends for One Group content opportunities"
+    context_files:
+      - "Marketing Department/wiki/social-media/content-strategy.md"
+      - "Marketing Department/wiki/projects/active-projects.md"
+    prompt: |
+      You are analyzing trending topics for One Group Developers marketing.
+
+      Raw trends data:
+      {{trends_data}}
+
+      Filter and rank these trends:
+      1. DIRECT: Real estate, property, home buying, RERA, loans
+      2. INFRASTRUCTURE: Roads, metro, airports near Mohali (Clermont) or Gurugram (Saavira)
+      3. FESTIVAL: Upcoming cultural occasions in next 14 days
+      4. GROWTH: City development, new projects, area appreciation news
+
+      Then suggest 3-5 specific content opportunities:
+      - What post angle this trend enables
+      - Which project it suits (Clermont/Saavira/both)
+      - Which content pillar it hits (Trust/Showcase/Location/Education/Community)
+      - Urgency (post within 24h / this week / this month)
+
+      Format as markdown. Save to: Marketing Department/working/trending-{{date}}.md
+    inputs: [trends_data]
+    outputs: [trending_report]
+
+outputs:
+  - name: trending_report
+    description: "Filtered trending report with content opportunities"
