@@ -1,0 +1,5 @@
+frontmatter:
+  required: [title, tags, date_created]
+  optional: [sources, related]
+wikilinks: true
+callout_rules: true

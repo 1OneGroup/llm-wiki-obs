@@ -1,0 +1,8 @@
+# Human Approval Node Template — copy and fill in
+- id: <node-id>
+  type: human_approval
+  description: ""
+  message: ""
+  # Message shown to human reviewer. Use {{variable}} for dynamic content.
+  inputs: []
+  # No outputs — workflow continues or stops based on human decision

@@ -1,0 +1,29 @@
+name: wiki-review
+description: "Human reviews and approves an existing wiki page for quality"
+version: "1.0"
+
+inputs:
+  - name: wiki_page_path
+    description: "Path to the wiki page to review"
+
+nodes:
+  - id: prepare-review
+    type: ai
+    description: "Summarize the page for the reviewer"
+    prompt: |
+      Read the wiki page at {{wiki_page_path}}.
+      Write a 3-5 sentence summary of what the page covers, what sources it cites,
+      and any potential issues (missing cross-links, outdated info, incomplete sections).
+    inputs: [wiki_page_path]
+    outputs: [review_summary]
+
+  - id: human-review
+    type: human_approval
+    description: "Human approves or requests revisions"
+    message: |
+      Please review {{wiki_page_path}}.
+
+      Summary: {{review_summary}}
+
+      Approve to mark this page as reviewed, or reject to request revisions.
+    inputs: [wiki_page_path, review_summary]

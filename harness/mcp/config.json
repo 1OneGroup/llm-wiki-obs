@@ -1,0 +1,6 @@
+{
+  "tools": ["guide", "search", "read", "write", "delete"],
+  "vault_root": "D:/One Group/obs+llmwiki",
+  "auth": "supabase_jwt",
+  "port": 8080
+}

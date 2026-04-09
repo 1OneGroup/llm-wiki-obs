@@ -1,0 +1,11 @@
+# AI Node Template — copy and fill in
+- id: <node-id>
+  type: ai
+  description: ""
+  prompt: |
+    <your prompt here>
+    Use {{variable}} syntax for inputs.
+  inputs: []
+  outputs: []
+  # Optional: context files to load before prompt
+  context_files: []

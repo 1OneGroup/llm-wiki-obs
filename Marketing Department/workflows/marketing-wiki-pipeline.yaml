@@ -1,0 +1,36 @@
+name: marketing-wiki-pipeline
+description: "Marketing-specific wiki generation with brand voice enforcement"
+version: "1.0"
+extends: "../../harness/workflows/wiki-ingest.yaml"
+
+# Override the generate node to add brand context
+overrides:
+  - node: generate
+    context_files:
+      - "Marketing Department/_context/INDEX.md"
+      - "Marketing Department/wiki/brand/brand-voice.md"
+    additional_prompt: |
+      Brand voice rules:
+      - Confident but not boastful
+      - Quiet luxury aesthetic
+      - BANNED WORDS: dream home, world-class, bespoke, ultra-luxury, exclusive offer, limited time, hurry, don't miss out
+      - Never make unverified claims about returns or timelines
+      - Always include RERA number when discussing projects
+
+# Additional nodes after global wiki-ingest completes
+nodes:
+  - id: format-for-obsidian
+    type: deterministic
+    description: "Run Obsidian formatter to add wikilinks and callout blocks"
+    command: "harness/services/obsidian-formatter/run.py --file {{wiki_page_path}}"
+    inputs: [wiki_page_path]
+    outputs: [formatted_page_path]
+
+  - id: update-index
+    type: ai
+    description: "Add new page entry to wiki/INDEX.md"
+    prompt: |
+      Update the file Marketing Department/wiki/INDEX.md.
+      Add an entry for [[{{relative_page_path}}]] — {{page_description}} under the appropriate section.
+      Keep all existing entries. Only add the new one.
+    inputs: [formatted_page_path, page_description]

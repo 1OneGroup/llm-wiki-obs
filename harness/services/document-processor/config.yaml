@@ -1,0 +1,4 @@
+chunk_size: 512
+chunk_overlap: 64
+ocr_provider: mistral  # optional
+supported_formats: [pdf, html, txt, md, xlsx]

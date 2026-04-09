@@ -1,0 +1,59 @@
+name: wiki-ingest
+description: "Ingest a source document and generate a wiki page"
+version: "1.0"
+
+inputs:
+  - name: source_path
+    description: "Path to the source document (relative to vault root)"
+  - name: department
+    description: "Department folder name (e.g., 'Marketing Department')"
+  - name: page_name
+    description: "Output wiki page filename (without .md)"
+
+nodes:
+  - id: process
+    type: deterministic
+    description: "Chunk and extract text from source document"
+    command: "harness/services/document-processor/run.py --input {{source_path}} --output /tmp/chunks.json"
+    inputs: [source_path]
+    outputs: [chunks]
+
+  - id: generate
+    type: ai
+    description: "Write an Obsidian wiki page from extracted chunks"
+    context_files:
+      - "{{department}}/_context/INDEX.md"
+    prompt: |
+      You are writing a wiki page for the {{department}}.
+
+      Source document chunks:
+      {{chunks}}
+
+      Write a clean, well-structured Obsidian markdown page. Requirements:
+      - Start with YAML frontmatter: title, tags, date_created, sources
+      - Use ## for sections, ### for subsections
+      - Use [[wikilinks]] for cross-references to other pages
+      - Use > [!note] callout blocks for key rules or warnings
+      - Cite sources with footnotes: [^1]: filename, p.X
+      - Keep writing style: informational, precise, no marketing language
+
+      Save the page to: {{department}}/wiki/{{page_name}}.md
+    inputs: [chunks]
+    outputs: [wiki_page_path]
+
+  - id: approve
+    type: human_approval
+    description: "Human reviews the generated wiki page"
+    message: "A new wiki page has been generated at {{wiki_page_path}}. Please review it in Obsidian and approve or request changes."
+    inputs: [wiki_page_path]
+
+  - id: update-log
+    type: ai
+    description: "Append entry to wiki/_log.md"
+    prompt: |
+      Append the following entry to {{department}}/wiki/_log.md:
+
+      | {{date}} | {{page_name}} | Generated from {{source_path}} |
+
+      Keep the existing log entries. Only add the new row.
+    inputs: [wiki_page_path, source_path, page_name]

@@ -1,0 +1,8 @@
+# Deterministic Node Template — copy and fill in
+- id: <node-id>
+  type: deterministic
+  description: ""
+  command: ""
+  # Use {{variable}} for inputs in command string
+  inputs: []
+  outputs: []
