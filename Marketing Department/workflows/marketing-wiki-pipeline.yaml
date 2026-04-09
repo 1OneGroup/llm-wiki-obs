@@ -26,7 +26,7 @@ nodes:
     inputs: [wiki_page_path]
     outputs: [formatted_page_path]
 
-  - id: update-index
+  - id: update-indexD:\One Group\supasmart\Marketing Department\_templates\designs\clermont\21-facade-front-elevation-high-quality-daytime.jpg
     type: ai
     description: "Add new page entry to wiki/INDEX.md"
     prompt: |

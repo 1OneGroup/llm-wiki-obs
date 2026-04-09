@@ -26,7 +26,7 @@ steps:
       height: "{{post_package.visual.dimensions.split('x')[1]}}"
       style: "photorealistic"
       quality: "high"
-    output_path: "Marketing Department/working/images/{{date}}-{{slug}}.png"
+    output_path: "Marketing Department/working/images/{{project}}/{{date}}-{{slug}}.png"
     outputs:
       - image_path
 

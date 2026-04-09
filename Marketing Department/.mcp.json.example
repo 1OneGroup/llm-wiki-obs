@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "nano-banana": {
+      "command": "uvx",
+      "args": ["nanobanana-mcp-server@latest"],
+      "env": {
+        "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY_HERE"
+      }
+    },
+    "postiz": {
+      "url": "https://YOUR_POSTIZ_HOST/mcp/YOUR_POSTIZ_API_KEY/sse"
+    }
+  }
+}
