@@ -1,0 +1,82 @@
+# Generate Graphic Node — Global, reusable
+# Combines assets-wiki lookup + Nano Banana MCP + user input
+# Reusable like /trending — works across all projects and departments
+# Usage: invoke with user_prompt, project, purpose
+
+id: generate-graphic
+type: deterministic
+description: "Generate or pick a graphic from assets-wiki, using Nano Banana MCP for AI generation when no existing asset fits"
+
+# --- Inputs (all from user or calling workflow) ---
+inputs:
+  - user_prompt       # What the graphic should show / the creative brief
+  - project           # e.g. "saavira", "clermont" — maps to _attachments/designs/{project}/
+  - purpose           # e.g. "instagram-carousel", "story", "thumbnail", "banner"
+  - style             # optional: "photorealistic" | "cinematic" | "editorial" (default: photorealistic)
+  - dimensions        # optional: "1080x1080" | "1080x1920" | "1920x1080" (default: 1080x1080)
+  - output_slug       # optional: short name for the output file (default: auto from prompt)
+
+# --- Step 1: Look up assets-wiki ---
+steps:
+  read_assets_index:
+    description: "Read the project's _attachments index to find relevant existing images"
+    mcp_tool: read
+    params:
+      path: "_attachments/designs/{{project}}/_index.md"
+    output: assets_index
+
+  # --- Step 2: AI decision — use existing asset or generate? ---
+  decide_source:
+    description: "Claude reads assets_index + user_prompt and decides: reuse or generate"
+    type: ai
+    prompt: |
+      You are a visual asset manager for a real estate marketing team.
+
+      USER BRIEF: {{user_prompt}}
+      PURPOSE: {{purpose}}
+      STYLE REQUESTED: {{style}}
+
+      AVAILABLE ASSETS:
+      {{assets_index}}
+
+      Decision rules:
+      1. If an existing asset closely matches the brief → output mode: "reuse" with the asset path
+      2. If no existing asset fits → output mode: "generate" with a refined Nano Banana prompt
+
+      Respond ONLY in this JSON format:
+      {
+        "mode": "reuse" | "generate",
+        "asset_path": "<path if reuse, else null>",
+        "nano_banana_prompt": "<refined prompt if generate, else null>",
+        "reason": "<one line why>"
+      }
+    inputs: [user_prompt, purpose, style, assets_index]
+    output: source_decision
+
+  # --- Step 3a: Call Nano Banana (if generate) ---
+  call_nano_banana:
+    condition: "{{source_decision.mode}} == 'generate'"
+    mcp_tool: nano_banana_generate
+    params:
+      prompt: "{{source_decision.nano_banana_prompt}}"
+      width: "{{dimensions.split('x')[0] | default('1080')}}"
+      height: "{{dimensions.split('x')[1] | default('1080')}}"
+      style: "{{style | default('photorealistic')}}"
+      quality: "high"
+    output_path: "_attachments/generated/{{project}}/{{date}}-{{output_slug | default(slugify(user_prompt))}}.png"
+    output: graphic_path
+
+  # --- Step 3b: Reuse existing asset ---
+  reuse_asset:
+    condition: "{{source_decision.mode}} == 'reuse'"
+    validate_path: "{{source_decision.asset_path}}"
+    output: graphic_path
+
+# --- Final output ---
+outputs:
+  - graphic_path          # Absolute path to the final image
+  - source_decision       # Full decision object (mode, reason) for downstream nodes
+
+output:
+  log: "Marketing Department/working/generate-graphic-log-{{date}}.md"
+  log_fields: [user_prompt, project, purpose, source_decision, graphic_path]

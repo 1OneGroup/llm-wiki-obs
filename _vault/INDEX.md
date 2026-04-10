@@ -12,6 +12,13 @@ date_created: 2026-04-09
 |---|---|---|
 | [[../Marketing Department/wiki/INDEX\|Marketing Department]] | 16 pages | Active |
 
+## Harness Reference
+
+| Reference | Description |
+|---|---|
+| [[nodes\|Nodes]] | All harness nodes — AI, deterministic, human |
+| [[glossary\|Glossary]] | Shared terminology across departments |
+
 ## About This Vault
 
 This vault is powered by LLM Wiki. Claude reads source documents and writes wiki pages you can browse here in Obsidian.
