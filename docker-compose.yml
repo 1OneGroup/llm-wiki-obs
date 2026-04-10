@@ -1,6 +1,16 @@
-version: "3.9"
-
 services:
+  wiki:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: llmwiki-web
+    restart: unless-stopped
+    volumes:
+      - ${VAULT_PATH:?Set VAULT_PATH in .env}:/vault:ro
+    networks:
+      - shared-proxy
+      - internal
+
   db:
     image: ankane/pgvector:latest
     container_name: llmwiki-db
@@ -9,8 +19,6 @@ services:
       POSTGRES_DB: llmwiki
       POSTGRES_USER: ${POSTGRES_USER:-llmwiki}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
-    ports:
-      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./harness/database/migrations:/docker-entrypoint-initdb.d:ro
@@ -19,25 +27,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  mcp:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: llmwiki-mcp
-    restart: unless-stopped
-    environment:
-      PORT: 8080
-      VAULT_ROOT: /vault
-      POSTGRES_URL: postgresql://${POSTGRES_USER:-llmwiki}:${POSTGRES_PASSWORD}@db:5432/llmwiki
-      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET:-}
-    ports:
-      - "8080:8080"
-    volumes:
-      - ${VAULT_PATH:?Set VAULT_PATH in .env}:/vault
-    depends_on:
-      db:
-        condition: service_healthy
+    networks:
+      - internal
 
 volumes:
   db_data:
+
+networks:
+  shared-proxy:
+    external: true
+  internal:
+    driver: bridge
